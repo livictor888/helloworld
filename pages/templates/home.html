@@ -18,9 +18,15 @@
 
 <!—Submit button is also contained in the form -->
   <h3>GMAT Score</h3>
-<input type="text" id="gmat" name="gmat"><br><br>
-<input type="submit" value="POST YOUR CHOICE">
-</form>
+<div class="input-group mb-3">
+<div class="input-group-prepend">
+<span class="input-group-text" id="inputGroup-sizing-default">GMAT Score</span>
+</div>
+<input type="text" name="gmat" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+</div>
+<div class="input-group mb-3">
+<button type="submit" class="btn btn-dark form-control">POST YOUR CHOICE</button>
+</div>
 <!-- End of form. -->
 
 <!-- This error will notify the user if there are issues with the POST request -->
