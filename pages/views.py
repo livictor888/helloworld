@@ -88,6 +88,28 @@ import pandas as pd
 #     return render(request, 'results.html', {'choice': workExperience, 'gmat': gmat,
 #                                             'prediction': singlePrediction})
 
+def results(request, choice, gmat):
+    print("*** Inside reults()")
+    # load saved model
+    with open('C:\\Users\\Victor\\PycharmProjects\\COMP-4948-4949\\4949-Big-Data-Analytics\\lesson 8\\helloworld\\model_pkl', 'rb') as f:
+        loadedModel = pickle.load(f)
+
+    # Create a single prediction.
+    singleSampleDf = pd.DataFrame(columns=['gmat', 'work_experience'])
+
+    workExperience = float(choice)
+    print("*** GMAT Score: " + str(gmat))
+    print("*** Years experience: " + str(workExperience))
+    singleSampleDf = singleSampleDf.append({'gmat':gmat,
+                                            'work_experience':workExperience},
+                                        ignore_index=True)
+
+    singlePrediction = loadedModel.predict(singleSampleDf)
+
+    print("Single prediction: " + str(singlePrediction))
+
+    return render(request, 'results.html', {'choice': workExperience, 'gmat':gmat,
+                'prediction':singlePrediction})
 
 def results(request):
     if request.method == "POST":
@@ -100,9 +122,16 @@ def results(request):
             loadedModel = pickle.load(f)
 
         singleSampleDf = pd.DataFrame(columns=['length', 'margin_low', 'margin_up', 'diagonal'])
-        billData = {'length': length, 'margin_low': margin_low, 'margin_up': margin_up, 'diagonal': diagonal}
-        singleSampleDf = pd.concat([singleSampleDf,
-                                    pd.DataFrame.from_records([billData])])
+        # billData = {'length': length, 'margin_low': margin_low, 'margin_up': margin_up, 'diagonal': diagonal}
+        # singleSampleDf = pd.concat([singleSampleDf,
+        #                             pd.DataFrame.from_records([billData])])
+
+        singleSampleDf = singleSampleDf.append({'length': length,
+                                                'margin_low': margin_low,
+                                                'margin_up': margin_up,
+                                                'diagonal': diagonal},
+                                               ignore_index=True)
+
 
         singlePrediction = loadedModel.predict(singleSampleDf)
         print("Single prediction: " + str(singlePrediction))
