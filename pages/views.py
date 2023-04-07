@@ -63,8 +63,13 @@ def homePost(request):
         # return HttpResponseRedirect(reverse('results',
         #                                     kwargs={'length': length, 'margin_low': margin_low, 'margin_up': margin_up,
         #                                             'diagonal': diagonal}, ))
-        return HttpResponseRedirect(reverse('results', kwargs={'length': length, 'margin_low': margin_low, 'margin_up': margin_up, 'diagonal': diagonal}))
-
+        # return HttpResponseRedirect(reverse('results', kwargs={'length': length, 'margin_low': margin_low, 'margin_up': margin_up, 'diagonal': diagonal}))
+        return HttpResponseRedirect(reverse('results', kwargs={
+            'length': request.POST['length_field'],
+            'margin_low': request.POST['margin_low_field'],
+            'margin_up': request.POST['margin_up_field'],
+            'diagonal': request.POST['diagonal_field']
+        }))
 
 import pickle
 import sklearn  # You must perform a pip install.
