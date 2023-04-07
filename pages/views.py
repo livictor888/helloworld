@@ -60,9 +60,10 @@ def homePost(request):
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
-        return HttpResponseRedirect(reverse('results',
-                                            kwargs={'length': length, 'margin_low': margin_low, 'margin_up': margin_up,
-                                                    'diagonal': diagonal}, ))
+        # return HttpResponseRedirect(reverse('results',
+        #                                     kwargs={'length': length, 'margin_low': margin_low, 'margin_up': margin_up,
+        #                                             'diagonal': diagonal}, ))
+        return HttpResponseRedirect(reverse('results', kwargs={'length': length, 'margin_low': margin_low, 'margin_up': margin_up, 'diagonal': diagonal}))
 
 
 import pickle
@@ -95,8 +96,8 @@ def results(request, length, margin_low, margin_up, diagonal):
 
     # return render(request, 'results.html', {'choice': workExperience, 'gmat':gmat,
     #             'prediction':singlePrediction})
-    # return render(request, "results.html", {"results": singlePrediction})
-    return HttpResponseRedirect(reverse('results', kwargs={'length': 150, 'margin_low': 3, 'margin_up': 4, 'diagonal': 150}))
+    return render(request, "results.html", {"results": singlePrediction})
+    # return HttpResponseRedirect(reverse('results', kwargs={'length': 150, 'margin_low': 3, 'margin_up': 4, 'diagonal': 150}))
 
 
 def todos(request):
