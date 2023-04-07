@@ -11,19 +11,23 @@ from django.views.generic import TemplateView
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from pages.models import Item, ToDoList
+from django.shortcuts import render
+from django.http import HttpResponse
 
 
 def homePageView(request):
     # return request object and specify page.
     return render(request, 'home.html', {
-        'mynumbers':[1,2,3,4,5,6,],
+        'mynumbers': [1, 2, 3, 4, 5, 6, ],
         'firstName': 'Victor',
         'lastName': 'Li'
     })
 
+
 def aboutPageView(request):
     # return request object and specify page.
     return render(request, 'about.html')
+
 
 def victorPageView(request):
     return render(request, 'victor.html')
@@ -57,31 +61,56 @@ def homePost(request):
 
 
 import pickle
-import sklearn # You must perform a pip install.
+import sklearn  # You must perform a pip install.
 import pandas as pd
 
-def results(request, choice, gmat):
-    print("*** Inside reults()")
-    # load saved model
-    with open('model_pkl', 'rb') as f:
-        loadedModel = pickle.load(f)
 
-    # Create a single prediction.
-    singleSampleDf = pd.DataFrame(columns=['gmat', 'work_experience'])
+# def results(request, choice, gmat):
+#     print("*** Inside reults()")
+#     # load saved model
+#     with open('model_pkl', 'rb') as f:
+#         loadedModel = pickle.load(f)
+#
+#     # Create a single prediction.
+#     singleSampleDf = pd.DataFrame(columns=['gmat', 'work_experience'])
+#
+#     workExperience = float(choice)
+#     print("*** GMAT Score: " + str(gmat))
+#     print("*** Years experience: " + str(workExperience))
+#     singleSampleDf = singleSampleDf.append({'gmat': gmat,
+#                                             'work_experience': workExperience},
+#                                            ignore_index=True)
+#
+#     singlePrediction = loadedModel.predict(singleSampleDf)
+#
+#     print("Single prediction: " + str(singlePrediction))
+#
+#     return render(request, 'results.html', {'choice': workExperience, 'gmat': gmat,
+#                                             'prediction': singlePrediction})
 
-    workExperience = float(choice)
-    print("*** GMAT Score: " + str(gmat))
-    print("*** Years experience: " + str(workExperience))
-    singleSampleDf = singleSampleDf.append({'gmat':gmat,
-                                            'work_experience':workExperience},
-                                        ignore_index=True)
 
-    singlePrediction = loadedModel.predict(singleSampleDf)
+def results(request):
+    if request.method == "POST":
+        length = float(request.POST.get("length"))
+        margin_low = float(request.POST.get("margin_low"))
+        margin_up = float(request.POST.get("margin_up"))
+        diagonal = float(request.POST.get("diagonal"))
+        print(length, margin_up, margin_low, diagonal)
+        with open('model_pkl', 'rb') as f:
+            loadedModel = pickle.load(f)
 
-    print("Single prediction: " + str(singlePrediction))
+        singleSampleDf = pd.DataFrame(columns=['length', 'margin_low', 'margin_up', 'diagonal'])
+        billData = {'length': length, 'margin_low': margin_low, 'margin_up': margin_up, 'diagonal': diagonal}
+        singleSampleDf = pd.concat([singleSampleDf,
+                                    pd.DataFrame.from_records([billData])])
 
-    return render(request, 'results.html', {'choice': workExperience, 'gmat':gmat,
-                'prediction':singlePrediction})
+        singlePrediction = loadedModel.predict(singleSampleDf)
+        print("Single prediction: " + str(singlePrediction))
+        # results = predict_fake_bills(length, margin_low, margin_up, diagonal)
+
+        return render(request, "results.html", {"results": singlePrediction})
+
+    return HttpResponse("Error: Invalid request method.")
 
 
 def todos(request):
@@ -90,12 +119,12 @@ def todos(request):
     itemErrandDetail = items.select_related('todolist')
     print(itemErrandDetail[0].todolist.name)
     return render(request, 'ToDoItems.html',
-                {'ToDoItemDetail': itemErrandDetail})
-
+                  {'ToDoItemDetail': itemErrandDetail})
 
 
 from django.shortcuts import render, redirect
 from .forms import RegisterForm
+
 
 def register(response):
     # Handle POST request.
@@ -109,16 +138,16 @@ def register(response):
     # Handle GET request.
     else:
         form = RegisterForm()
-    return render(response, "registration/register.html", {"form":form})
+    return render(response, "registration/register.html", {"form": form})
 
 
 def message(request, msg, title):
-    return render(request, 'message.html', {'msg': msg, 'title': title })
+    return render(request, 'message.html', {'msg': msg, 'title': title})
 
 
 def secretArea(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('message',
-               kwargs={'msg': "Please login to access this page.",
-                       'title': "Login required."}, ))
-    return render(request, 'secret.html', {'useremail': request.user.email })
+                                            kwargs={'msg': "Please login to access this page.",
+                                                    'title': "Login required."}, ))
+    return render(request, 'secret.html', {'useremail': request.user.email})
