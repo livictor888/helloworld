@@ -63,7 +63,7 @@ import pandas as pd
 def results(request, choice, gmat):
     print("*** Inside reults()")
     # load saved model
-    with open('C:\\Users\\Victor\\PycharmProjects\\COMP-4948-4949\\4949-Big-Data-Analytics\\lesson 8\\helloworld\\model_pkl', 'rb') as f:
+    with open('model_pkl', 'rb') as f:
         loadedModel = pickle.load(f)
 
     # Create a single prediction.
