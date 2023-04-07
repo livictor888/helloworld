@@ -95,7 +95,8 @@ def results(request, length, margin_low, margin_up, diagonal):
 
     # return render(request, 'results.html', {'choice': workExperience, 'gmat':gmat,
     #             'prediction':singlePrediction})
-    return render(request, "results.html", {"results": singlePrediction})
+    # return render(request, "results.html", {"results": singlePrediction})
+    return HttpResponseRedirect(reverse('results', kwargs={'length': 150, 'margin_low': 3, 'margin_up': 4, 'diagonal': 150}))
 
 
 def todos(request):
