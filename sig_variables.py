@@ -5,6 +5,7 @@ from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, confusion_matrix, recall_score, precision_score
+import matplotlib.pyplot as plt
 
 
 def preprocess_data(df):
@@ -35,10 +36,16 @@ np.set_printoptions(precision=3)
 print("\nPredictor variables: " + str(predictorVariables))
 print("Predictor Chi-Square Scores: " + str(chiScores.scores_))
 
+# Plot the bar graph of predictor variables and their chi-square scores
+plt.bar(predictorVariables, chiScores.scores_)
+plt.title('Chi-Square Scores of Predictor Variables')
+plt.xlabel('Predictor Variables')
+plt.ylabel('Chi-Square Scores')
+plt.show()
+
 # Find the most significant predictor variables
 sorted_idx = np.argsort(chiScores.scores_)[::-1]
 top_features = np.array(predictorVariables)[sorted_idx]
 print("\nMost significant predictor variables:")
 print(top_features)
 
-# Rest of the code is the same as in the original script

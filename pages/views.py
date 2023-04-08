@@ -52,18 +52,21 @@ def homePost(request):
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
-        return HttpResponseRedirect(reverse('results', kwargs={'length': length, 'margin_low': margin_low, 'margin_up': margin_up, 'diagonal': diagonal, 'height_left': height_left, 'height_right': height_right}, ))
+        return HttpResponseRedirect(reverse('results',
+                                            kwargs={'length': length, 'margin_low': margin_low, 'margin_up': margin_up,
+                                                    'diagonal': diagonal, 'height_left': height_left,
+                                                    'height_right': height_right}, ))
 
 
 def results(request, length, margin_low, margin_up, diagonal, height_left, height_right):
-    print("*** Inside reults()")
+    print("*** Inside results()")
     # load saved model
     with open('model_pkl', 'rb') as f:
         loadedModel = pickle.load(f)
 
     # Create a single prediction.
     singleSampleDf = pd.DataFrame(columns=[
-                                  'length', 'margin_low', 'margin_up', 'diagonal', 'height_left', 'height_right'])
+        'length', 'margin_low', 'margin_up', 'diagonal', 'height_left', 'height_right'])
     currentLength = float(length)
     currentMarginLow = float(margin_low)
     currentMarginUp = float(margin_up)
@@ -76,8 +79,7 @@ def results(request, length, margin_low, margin_up, diagonal, height_left, heigh
     print("*** Diagonal: " + str(currentDiagonal))
     print("*** Height Left: " + str(currentHeightLeft))
     print("*** Height Right: " + str(currentHeightRight))
-    # singleSampleDf = singleSampleDf.append({'length':currentLength, 'margin_low':currentMarginLow, 'margin_up':currentMarginUp, 'diagonal':currentDiagonal, 'height_left':currentHeightLeft, 'height_right':currentHeightRight},
-    #  ignore_index=True)
+
     singleSampleDf = pd.DataFrame.from_records([{
         'length': currentLength,
         'margin_low': currentMarginLow,
@@ -90,4 +92,6 @@ def results(request, length, margin_low, margin_up, diagonal, height_left, heigh
     singlePrediction = loadedModel.predict(singleSampleDf)
 
     print("Single prediction: " + str(singlePrediction))
-    return render(request, 'results.html', {'length': length, 'margin_low': margin_low, 'margin_up': margin_up, 'diagonal': diagonal, 'height_left': height_left, 'height_right': height_right, 'prediction': singlePrediction})
+    return render(request, 'results.html',
+                  {'length': length, 'margin_low': margin_low, 'margin_up': margin_up, 'diagonal': diagonal,
+                   'height_left': height_left, 'height_right': height_right, 'prediction': singlePrediction})
